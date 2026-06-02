@@ -1,0 +1,14 @@
+Control shift g --> generar g4
+
+Recorrer --> Calcular atributos --> Comprobaciones
+
+Mapl Gvm --> para comprobar el código generado
+
+Para repasar --> probar Operador ternario
+Pasos:
+    1) UML
+    2) G4
+    3) Lvalue
+    4) TypeChecking
+    5) Identification
+    6) GenCode

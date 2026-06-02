@@ -1,0 +1,107 @@
+AG = (G, A, R)
+
+G =
+(1) Variable: expression --> ID
+(2) FieldAccess: expression₁ --> expression₂ ID
+(3) NumberLiteral: expression -> REAL_CONSTANT
+(4) CharLiteral: expression -> CHAR_CONSTANT
+(5) IntLiteral: expression -> INT_CONSTANT
+(6) ArrayAccess: expression₁ --> expression₂ expression₃
+(7) UnaryMinus: expression₁ --> expression₂
+(8) UnaryNot: expression₁ --> expression₂
+(9) Arithmetic: expression₁ --> expression₂ (+|-|*|/) expression₃
+(10) Comparison: expression₁ --> expression₂ (>|>=|<=|<|==|!=) expression₃
+(11) Logic: expression₁ --> expression₂ ( && | || ) expression₃
+(12) Invocation: expression₁ --> expression₂ expression₃*
+(13) Programa: programa --> definition*
+(14) VarDefinition: definition --> ID type
+(15) FuncDefinition: definition --> ID type statement*
+(16) Invocation: statement --> expression₁ expresion₂*
+(17) Return: statement --> expression
+(18) While: statement₁ --> expression statement₂*
+(19) If: statement₁ --> expression statement₂* statement₃*
+(20) Assignment: statement --> expression₁ expression₂
+(21) Input: statement --> expression*
+(22) Log: statement --> expression*
+(23) Cast: expression₁ --> expression₂ type
+
+-------------
+Offset
+-------------
+
+A = { definition.offset ∈ IntType.getInstance()}
+
+R =
+(14) if (definition.scope == 0){
+        definition.offset = globalBytesSum
+        globalBytesSum+=definition.type.numberOfBytes();
+     } else{
+        if (isLocal){
+            localBytesSum+= definition.type.numberOfBytes();
+            definition.offset = -localBytesSum;
+        } else{
+             definition.offset = 4 + paramBytesSum
+             paramBytesSum+=definition.type.numberOfBytes();
+        }
+     }
+
+-------------
+LValue (False por defecto)
+-------------
+
+A = { expression.lvalue ∈ Boolean}
+
+R =
+(1) expression.lvalue = true
+(2) expression₁.lvalue = true
+(6) expression₁.lvalue = true
+
+-------------
+definition
+-------------
+
+A = { expression.definition ∈ VarDefinition}
+
+R =
+(1) VarDefinition def = st.get(expression.name)
+    if (def == null) {
+        System.err.println("Variable no definidida anteriormente");
+    } else {
+        expression.definition = def
+    }
+(14) boolean respuestaInsert = st.insert(definition);
+     if (!respuestaInsert) {
+        System.err.println("Variable duplicada");
+     }
+(15) boolean respuestaInsert = st.insert(definition);
+     if (!respuestaInsert) {
+        System.err.println("Función duplicada");
+     } else {
+        st.set();
+        //Recorrer
+        symbolTable.reset();
+     }
+
+-------------
+type
+-------------
+
+A = { expression.type ∈ Type}
+
+R =
+(1) expression.type =expression.definition.type
+(2) expression₁.type = expression₂.type.dot(ID)
+(3) expression.type = NumberType.getInstance()
+(4) expression.type = CharType.getInstance()
+(5) expression.type = IntType.getInstance()
+(6) expression₁.type = expression₂.type.squareBrackets(expression₃.type)
+(7) expression₁.type = expression₂.type.arithmetic()
+(8) expression₁.type = expression₂.type.mustBeLogical()
+(9) expression₁.type = expression₂.type.arithmetic(expression₃.type)
+(10) expression₁.type = expression₂.type.comparison(expression₃.type)
+(11) expression₁.type = expression₂.type.logic(expression₃.type)
+(12) List<Type> tipos = new ArrayList<>();
+     for (Expression e : expression₃*) {
+        tipos.add(e.type);
+     }
+     expression₁.type = (expression₂.type.parentesis(tipos));

@@ -1,0 +1,6 @@
+Generate code for:
+- Function invocations
+- Return statements
+
+CFG-chat:
+https://forms.office.com/e/8f5i4wPrkP
